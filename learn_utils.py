@@ -18,7 +18,7 @@ def sliding_chunker(data, window_len, slide_len):
     gives [ [0, 1, 2], [2, 3, 4] ]
     """
     chunks = []
-    for pos in range(0, len(data), slide_len):
+    for pos in range(0, len(data), int(slide_len)):
         chunk = np.copy(data[pos:pos+window_len])
         if len(chunk) != window_len:
             continue
@@ -60,10 +60,10 @@ def reconstruct(data, window, clusterer):
         # window the segment so that we can find it in our clusters which were
         # formed from windowed data
         segment *= window
-        nearest_match_idx = clusterer.predict(segment)[0]
+        nearest_match_idx = clusterer.predict(segment.reshape(1, -1))[0]
         nearest_match = np.copy(clusterer.cluster_centers_[nearest_match_idx])
 
-        pos = segment_n * slide_len
+        pos = int(segment_n * slide_len)
         reconstructed_data[pos:pos+window_len] += nearest_match
 
     return reconstructed_data
